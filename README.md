@@ -1,0 +1,2 @@
+# InAppStorySdkKt
+Kotlin Version
