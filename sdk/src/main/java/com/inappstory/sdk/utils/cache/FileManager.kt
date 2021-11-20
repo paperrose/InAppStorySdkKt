@@ -1,5 +1,7 @@
 package com.inappstory.sdk.utils.cache
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 //Main access class
@@ -22,5 +24,25 @@ class FileManager(private val lruCacheManager: LruCacheManager) {
             cache?.put(key, it)
         }
         return GetFileResult(file, false)
+    }
+
+    fun getFileAsync(
+        url: String, fast: Boolean, outputFile: File? = null,
+        callback: ((Long, Long) -> Unit)? = null
+    ): GetFileResult {
+        val key: String = Decoder.cropUrl(url)
+        val cache = if (fast) lruCacheManager.fastCache else lruCacheManager.commonCache
+        cache?.get(key)?.let {
+            return GetFileResult(it, true)
+        }
+        GlobalScope.launch {
+            val file: File? =
+                FileNetworkDownloader().downloadFile(url,
+                    outputFile ?: cache?.getFileFromKey(key), callback)
+            file?.let {
+                cache?.put(key, it)
+            }
+        }
+        return GetFileResult(null, false)
     }
 }

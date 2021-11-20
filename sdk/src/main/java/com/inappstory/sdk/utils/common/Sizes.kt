@@ -1,4 +1,4 @@
-package com.inappstory.sdk.utils
+package com.inappstory.sdk.utils.common
 
 import android.content.Context
 import android.graphics.Point

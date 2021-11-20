@@ -7,7 +7,6 @@ interface CachedStoryModelProtocol : CellStoryModelProtocol {
     fun disableClose(): Boolean
     fun slidesCount(): Int
     fun hasLike(): Boolean
-    fun hasAudio(): Boolean
     fun hasFavorite(): Boolean
     fun hasShare(): Boolean
 }

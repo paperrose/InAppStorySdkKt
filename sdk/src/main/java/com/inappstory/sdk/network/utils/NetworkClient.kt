@@ -1,6 +1,7 @@
 package com.inappstory.sdk.network.utils
 
 import android.os.Build
+import android.util.Log
 import com.inappstory.sdk.network.callbacks.NetworkCallback
 import com.inappstory.sdk.utils.json.JsonParser
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -51,6 +52,8 @@ class NetworkClient {
         connection.readTimeout = 30000
         connection.requestMethod = request.getMethod()
 
+
+        Log.e("InAppStoryKT_Network", connection.url.toString())
         for (key: String in request.headers.keys) {
             connection.setRequestProperty(key, request.headers[key])
         }
@@ -80,16 +83,19 @@ class NetworkClient {
         val statusCode = connection.responseCode
         if (callback != null)
             if (statusCode == 200 || statusCode == 201 || statusCode == 202) {
-                callback.onSuccess(
-                    if (callback.getClass() == null) {
-                        callback.onSuccess(null)
-                    } else {
-                        jsonParser.jsonToPOJO(
-                            getResponseFromStream(connection.inputStream),
+                Log.e("click", "storyFavorite test")
+                if (callback.getClass() == null) {
+                    callback.onSuccess(null)
+                } else {
+                    val res = getResponseFromStream(connection.inputStream)
+                    Log.e("InAppStoryKT_Network", res!!)
+                    callback.onSuccess(
+                        jsonParser.jsonToPOJO(res,
                             callback.getClass()!!, callback.isList()
                         )
-                    }
-                )
+                    )
+                }
+
             } else {
                 getResponseFromStream(connection.errorStream)?.let {
                     callback.onFailure(

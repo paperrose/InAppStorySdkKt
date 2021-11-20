@@ -9,9 +9,11 @@ interface CellStoryModelProtocol {
     fun titleColor(): String
     fun deeplink(): String?
     fun backgroundColor(): String
-    fun imageCover(quality: ImageQuality): Image?
+    fun imageCover(quality: ImageQuality?): Image?
+    fun images(): ArrayList<Image>?
     fun videoCoverUrl(): String?
     fun favorite(): Boolean
+    fun hasAudio(): Boolean
     fun isOpened(): Boolean
     fun hideInReader(): Boolean
 }

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
-import com.inappstory.sdk.utils.Sizes
+import com.inappstory.sdk.utils.common.Sizes
 
 class DeviceSettings {
     var deviceId: String? = null

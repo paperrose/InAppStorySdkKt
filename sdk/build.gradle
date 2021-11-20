@@ -75,7 +75,7 @@ dependencies {
 
     //Core
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.6.0'
 
     //Reflection
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.5.30'

@@ -1,6 +1,7 @@
 package com.inappstory.sdk.network
 
 import android.content.Context
+import android.util.Log
 import com.inappstory.sdk.api.data.models.StatisticSessionObject
 import com.inappstory.sdk.api.statistic.managers.ProfilingManager
 import com.inappstory.sdk.api.statistic.managers.StatisticManagerV1
@@ -9,6 +10,7 @@ import com.inappstory.sdk.api.statistic.models.ProfilingTask
 import com.inappstory.sdk.api.statistic.models.StatisticTaskV2
 import com.inappstory.sdk.network.callbacks.*
 import com.inappstory.sdk.network.utils.NetworkSettings
+import com.inappstory.sdk.utils.imageloader.ImageLoader
 
 class ApiWorker(
     var context: Context, var apiKey: String,
@@ -118,7 +120,7 @@ class ApiWorker(
     }
 
 
-    fun sendProfilingTiming(task: ProfilingTask, callback: EmptyCallback) {
+    fun sendProfilingTiming(task: ProfilingTask, callback: EmptyCallback? = null) {
         sessionManager.checkSession(object : SessionOpenCallback() {
             override fun onSuccess(response: Any?) {
                 requestGenerator.sendProfilingTiming(task, callback)
@@ -132,7 +134,7 @@ class ApiWorker(
     }
 
 
-    fun sendStatV2(eventName: String, callback: EmptyCallback, task: StatisticTaskV2) {
+    fun sendStatV2(eventName: String, callback: EmptyCallback? = null, task: StatisticTaskV2) {
         sessionManager.checkSession(object : SessionOpenCallback() {
             override fun onSuccess(response: Any?) {
                 requestGenerator.sendStatV2(eventName, callback, task)
@@ -158,7 +160,7 @@ class ApiWorker(
         })
     }
 
-    fun storyLikeDislike(id: String, value: String, callback: EmptyCallback?) {
+    fun storyLikeDislike(id: String, value: String, callback: EmptyCallback? = null) {
         sessionManager.checkSession(object : SessionOpenCallback() {
             override fun onSuccess(response: Any?) {
 
@@ -171,10 +173,9 @@ class ApiWorker(
         })
     }
 
-    fun storyFavorite(id: String, value: String, callback: EmptyCallback?) {
+    fun storyFavorite(id: String, value: String, callback: EmptyCallback? = null) {
         sessionManager.checkSession(object : SessionOpenCallback() {
             override fun onSuccess(response: Any?) {
-
                 requestGenerator.storyFavorite(id, value, callback)
             }
 
@@ -201,7 +202,7 @@ class ApiWorker(
         sessionManager.checkSession(openCallback)
     }
 
-    fun sendSessionStatistic(data: StatisticSessionObject, callback: EmptyCallback) {
+    fun sendSessionStatistic(data: StatisticSessionObject, callback: EmptyCallback? = null) {
         sessionManager.checkSession(object : SessionOpenCallback() {
             override fun onSuccess(response: Any?) {
                 requestGenerator.sendSessionStatistic(data, callback)
@@ -213,7 +214,7 @@ class ApiWorker(
         })
     }
 
-    fun closeSession(data: StatisticSessionObject?, callback: EmptyCallback) {
+    fun closeSession(data: StatisticSessionObject?, callback: EmptyCallback? = null) {
         sessionManager.closeSession(data, callback)
     }
 }

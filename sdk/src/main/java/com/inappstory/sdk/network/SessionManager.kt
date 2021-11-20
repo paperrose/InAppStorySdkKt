@@ -19,7 +19,7 @@ class SessionManager(private val requestGenerator: RequestGenerator? = null) {
     private var isOpening: Boolean = false
 
 
-    fun closeSession(data: StatisticSessionObject?, callback: EmptyCallback) {
+    fun closeSession(data: StatisticSessionObject?, callback: EmptyCallback?) {
         SessionData.instance = null
         requestGenerator?.closeSession(data, callback)
     }
@@ -30,6 +30,7 @@ class SessionManager(private val requestGenerator: RequestGenerator? = null) {
         } else {
             addCallback(callback)
             if (!isOpening) {
+                isOpening = true
                 requestGenerator?.openSession(object : SessionOpenCallback() {
                     override fun onSuccess(response: Any?) {
                         (response as OpenSessionResponse).saveSession()

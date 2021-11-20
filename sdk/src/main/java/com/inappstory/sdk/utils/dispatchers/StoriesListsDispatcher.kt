@@ -12,7 +12,7 @@ object StoriesListsDispatcher {
         subscribers.remove(manager)
     }
 
-    fun storyFavorite(storyId: String, favorite: Boolean) {
+    fun storyFavorite(storyId: String, favorite: String) {
         subscribers.forEach {
             it.storyFavorite(storyId, favorite)
         }

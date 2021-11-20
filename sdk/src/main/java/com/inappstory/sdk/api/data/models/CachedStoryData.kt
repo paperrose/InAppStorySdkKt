@@ -26,9 +26,6 @@ open class CachedStoryData : CachedStoryModelProtocol {
     @SerializedName("video_cover")
     var videoUrl: ArrayList<Image>?
 
-    fun getVideoUrl(): String? {
-        return if (videoUrl != null && videoUrl!!.isNotEmpty()) videoUrl!![0].url else null
-    }
 
     @SerializedName("like")
     var like: Int?
@@ -136,16 +133,20 @@ open class CachedStoryData : CachedStoryModelProtocol {
         return backgroundColor ?: "#000000"
     }
 
-    override fun imageCover(quality: ImageQuality): Image? {
+    override fun imageCover(quality: ImageQuality?): Image? {
         if (image.isNullOrEmpty()) return null
         var q: String? = "m"
-        if (quality == ImageQuality.HIGH) {
+        if (quality != null && quality == ImageQuality.HIGH) {
             q = "h"
         }
         image!!.forEach {
             if (it.type.equals(q)) return it
         }
         return image!![0]
+    }
+
+    override fun images(): ArrayList<Image>? {
+        return image
     }
 
     override fun videoCoverUrl(): String? {

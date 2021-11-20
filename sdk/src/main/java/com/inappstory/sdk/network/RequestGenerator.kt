@@ -249,7 +249,7 @@ class RequestGenerator(var context: Context, var networkSettings: NetworkSetting
         )
         request.queryFields = getStoriesListQueryParams(
             null,
-            "id, background_color, image", true
+            "id,background_color,image", true
         )
         setHeaders(request, hasSession = true, hasUserId = true)
         networkClient.enqueue(request, getStoriesListCallback);
@@ -275,7 +275,7 @@ class RequestGenerator(var context: Context, var networkSettings: NetworkSetting
     }
 
 
-    fun sendProfilingTiming(task: ProfilingTask, callback: EmptyCallback) {
+    fun sendProfilingTiming(task: ProfilingTask, callback: EmptyCallback?) {
         val request = Request(
             RequestType.POST,
             getUrl("v2/profiling/timing"),
@@ -299,7 +299,7 @@ class RequestGenerator(var context: Context, var networkSettings: NetworkSetting
     }
 
 
-    fun sendStatV2(eventName: String, callback: EmptyCallback, task: StatisticTaskV2) {
+    fun sendStatV2(eventName: String, callback: EmptyCallback?, task: StatisticTaskV2) {
         val request = Request(
             RequestType.GET,
             getUrl("stat/$eventName"),
@@ -383,7 +383,7 @@ class RequestGenerator(var context: Context, var networkSettings: NetworkSetting
         networkClient.enqueue(request, openCallback);
     }
 
-    fun sendSessionStatistic(data: StatisticSessionObject, callback: EmptyCallback) {
+    fun sendSessionStatistic(data: StatisticSessionObject, callback: EmptyCallback?) {
         val request = Request(
             RequestType.POST,
             getUrl("v2/session/update"),
@@ -395,7 +395,7 @@ class RequestGenerator(var context: Context, var networkSettings: NetworkSetting
         networkClient.enqueue(request, callback);
     }
 
-    fun closeSession(data: StatisticSessionObject?, callback: EmptyCallback) {
+    fun closeSession(data: StatisticSessionObject?, callback: EmptyCallback?) {
         val request = Request(
             RequestType.POST,
             getUrl("v2/session/close"),
