@@ -3,4 +3,9 @@
     <declare-styleable name="StoriesList">
         <attr name="cs_listIsFavorite" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="DraggableLayout">
+        <attr name="dragDismissDistance" format="dimension" />
+        <attr name="dragDismissScale" format="float" />
+    </declare-styleable>
 </resources>
