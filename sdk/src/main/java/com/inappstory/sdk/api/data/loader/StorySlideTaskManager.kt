@@ -3,15 +3,16 @@ package com.inappstory.sdk.api.data.loader
 import android.util.Log
 import com.inappstory.sdk.api.data.models.protocols.ReaderStoryDataProtocol
 import com.inappstory.sdk.utils.cache.FileManager
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
+import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 import kotlin.math.max
 
-class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
-                            val fileManager: FileManager) {
+class StorySlideTaskManager(
+    var storyTaskManager: StoryTaskManager,
+    val fileManager: FileManager
+) {
     private val storyPageTaskLock: Any = Object()
 
     class StoryPageTask(
@@ -24,6 +25,18 @@ class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
         }
     }
 
+
+    private val indexLoader = Executors.newFixedThreadPool(1)
+
+
+    private val slideLoader = Executors.newFixedThreadPool(1)
+
+    val indexRunnable: Runnable = Runnable {
+        checkIndexQueue()
+    }
+    val slideRunnable: Runnable = Runnable {
+        checkTaskQueue()
+    }
     private var loadedStoryPages: HashSet<Pair<String, Int>> = HashSet()
 
     var secondaryPageTasks: HashMap<Pair<String, Int>, StoryPageTask> =
@@ -32,12 +45,15 @@ class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
     var pageTasks: HashMap<Pair<String, Int>, StoryPageTask> =
         HashMap()
 
+    private var callbacks: HashMap<Pair<String, Int>, OnSlideLoaded?> =
+        HashMap()
+
     private fun asyncCheckIndexQueue() {
-        GlobalScope.launch { checkIndexQueue() }
+        indexLoader.submit(indexRunnable)
     }
 
     private fun asyncCheckTaskQueue() {
-        GlobalScope.launch { checkTaskQueue() }
+        slideLoader.submit(slideRunnable)
     }
 
     private fun checkTaskQueue() {
@@ -45,9 +61,9 @@ class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
         var task: StoryPageTask? = null
         var taskKey: Pair<String, Int>? = null
         synchronized(storyPageTaskLock) {
+
             if (pageTasks.isNotEmpty() || secondaryPageTasks.isNotEmpty()) {
                 taskKey = getMaxPriorityTaskKey()
-               // Log.e("remove keys", pageTasks.keys.toString())
                 if (taskKey != null) {
                     if (pageTasks.containsKey(taskKey)) {
                         task = pageTasks[taskKey]
@@ -56,7 +72,7 @@ class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
                     }
 
                 }
-             //   Log.e("remove keys2", pageTasks.keys.toString())
+                //   Log.e("remove keys2", pageTasks.keys.toString())
             }
         }
         if (task != null) {
@@ -66,15 +82,26 @@ class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
             task?.videoUrls?.forEach {
                 loadFileByUrl(it)
             }
+            var callback: OnSlideLoaded? = null
             synchronized(storyPageTaskLock) {
-                loadedStoryPages.add(taskKey!!)
-                pageTasks.remove(taskKey!!)
-                secondaryPageTasks.remove(taskKey!!)
+                taskKey?.let { key ->
+                    loadedStoryPages.add(key)
+                    callback = callbacks[key]
+                    callbacks.remove(key)
+                    pageTasks.remove(key)
+                    secondaryPageTasks.remove(key)
+                }
             }
-          //  Log.e("remove task key", taskKey.toString())
+            taskKey?.let { key ->
+                callback?.onSlideLoaded(
+                    key.first,
+                    key.second
+                )
+            }
+            //  Log.e("remove task key", taskKey.toString())
             asyncCheckTaskQueue()
         } else {
-            Thread.sleep(500)
+            Thread.sleep(100)
             asyncCheckTaskQueue()
         }
     }
@@ -82,7 +109,7 @@ class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
     private fun loadFileByUrl(url: String) {
         val result = fileManager.getFile(url, false)
         result.let {
-            Log.e("fileDownload",  "${it.fromCache} ${it.file?.absolutePath}")
+            Log.e("fileDownload", "${it.fromCache} ${it.file?.absolutePath}")
         }
     }
 
@@ -98,7 +125,7 @@ class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
                 if (!loadedStoryPages.contains(it.slideId)) {
                     val created = createTasks(
                         false, storyTaskManager.loadedStories[it.slideId.first],
-                        it.slideId, max(2, pageTasks.size+1)
+                        it.slideId, max(2, pageTasks.size + 1)
                     )
                     if (created) local.add(it)
                 }
@@ -108,7 +135,7 @@ class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
             }
             local.clear()
         }
-        Thread.sleep(500)
+        Thread.sleep(100)
         asyncCheckIndexQueue()
     }
 
@@ -119,7 +146,8 @@ class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
         readerStoryDataProtocol: ReaderStoryDataProtocol?,
         slideId: Pair<String, Int>,
         minPriority: Int
-    ) : Boolean {
+    ): Boolean {
+
         if (readerStoryDataProtocol == null) return false
         var priority = minPriority
         val slidesCount = readerStoryDataProtocol.slidesCount()
@@ -162,12 +190,25 @@ class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
         neighborsStoriesSlides: ArrayList<LoadSlideTaskWithCallback>,
         reload: Boolean
     ) {
+
         synchronized(storyPageTaskLock) {
             pageTasks.clear()
             secondaryPageTasks.clear()
             this.mainStorySlide = mainStorySlide
             this.neighborsStoriesSlides.clear()
             this.neighborsStoriesSlides.addAll(neighborsStoriesSlides)
+        }
+    }
+
+    fun hasSlide(slide: Pair<String, Int>): Boolean {
+        synchronized(storyPageTaskLock) {
+            return loadedStoryPages.contains(slide)
+        }
+    }
+
+    fun addCallback(slide: Pair<String, Int>, onSlideLoaded: OnSlideLoaded) {
+        synchronized(storyPageTaskLock) {
+            callbacks[slide] = onSlideLoaded
         }
     }
 
@@ -180,24 +221,24 @@ class StorySlideTaskManager(var storyTaskManager: StoryTaskManager,
 
     fun getMaxPriorityTaskKey(): Pair<String, Int>? {
         var key: Pair<String, Int>? = null
-        synchronized(storyPageTaskLock) {
-            var priority = 100
-            pageTasks.forEach {
-                if (it.value.priority < priority) {
+        var priority = 100
+
+        pageTasks.forEach {
+            if (it.value.priority < priority) {
+                priority = it.value.priority
+                key = it.key
+            }
+        }
+        if (key == null) {
+            secondaryPageTasks.forEach {
+                if (it.value.priority <= priority) {
                     priority = it.value.priority
                     key = it.key
                 }
             }
-            if (key == null) {
-                secondaryPageTasks.forEach {
-                    if (it.value.priority <= priority) {
-                        priority = it.value.priority
-                        key = it.key
-                    }
-                }
-            }
-
         }
+
+
         return key
     }
 

@@ -30,7 +30,7 @@ class DraggableLayoutViewModel : ViewModel() {
 
     fun onDragDropped() {
         subscribers.forEach {
-            it.onDragDismissed()
+            it.onDragDropped()
         }
     }
 

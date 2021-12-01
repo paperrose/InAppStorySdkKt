@@ -24,6 +24,10 @@ class SessionManager(private val requestGenerator: RequestGenerator? = null) {
         requestGenerator?.closeSession(data, callback)
     }
 
+    fun checkSessionSync(): Boolean {
+        return SessionData.instance != null
+    }
+
     fun checkSession(callback: SessionOpenCallback) {
         if (SessionData.instance != null) {
             callback.onSuccess(null)

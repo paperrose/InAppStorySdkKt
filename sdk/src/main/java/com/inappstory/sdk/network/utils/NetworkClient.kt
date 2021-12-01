@@ -6,13 +6,14 @@ import com.inappstory.sdk.network.callbacks.NetworkCallback
 import com.inappstory.sdk.utils.json.JsonParser
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.util.*
+import java.util.concurrent.Executors
 
 class NetworkClient {
     var jsonParser: JsonParser = JsonParser()
@@ -28,9 +29,12 @@ class NetworkClient {
         return URL(request.url + qVars)
     }
 
+
+    private val executor = Executors.newFixedThreadPool(5)
+
     @OptIn(DelicateCoroutinesApi::class)
     fun enqueue(request: Request, callback: NetworkCallback?) {
-        GlobalScope.launch {
+        executor.submit {
             execute(request, callback)
         }
     }
@@ -45,13 +49,35 @@ class NetworkClient {
         return value
     }
 
+    fun getContentType(request: Request): String? {
+        val connection = getUrl(request)
+            .openConnection() as HttpURLConnection
+        connection.connectTimeout = 30000
+        connection.readTimeout = 30000
+        connection.requestMethod = request.getMethod()
+        val statusCode = connection.responseCode
+        if (statusCode == 200 || statusCode == 201 || statusCode == 202) {
+            return getHeaders(connection)["Content-Type"]
+        }
+        return null
+    }
+
+    private fun getHeaders(connection: HttpURLConnection): HashMap<String, String> {
+        val headers = HashMap<String, String>()
+        for ((key, value) in connection.headerFields) {
+            if (key != null) {
+                headers[key] = value[0]
+            }
+        }
+        return headers
+    }
+
     fun execute(request: Request, callback: NetworkCallback?) {
         val connection = getUrl(request)
             .openConnection() as HttpURLConnection
         connection.connectTimeout = 30000
         connection.readTimeout = 30000
         connection.requestMethod = request.getMethod()
-
 
         Log.e("InAppStoryKT_Network", connection.url.toString())
         for (key: String in request.headers.keys) {
@@ -61,14 +87,17 @@ class NetworkClient {
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
         }
         if (request.bodyFields.isNotEmpty()) {
-            for (key : String in request.bodyFields.keys) {
+            for (key: String in request.bodyFields.keys) {
                 request.body += "&" + key + "=" + encode(request.bodyFields[key])
             }
             if (request.body.isNotEmpty() && request.body.startsWith("&")) {
                 request.body = request.body.substring(1)
             }
         }
-        if (request.requestType != RequestType.GET && request.body.isNotEmpty()) {
+        if ((request.requestType == RequestType.POST
+                    || request.requestType == RequestType.PUT)
+            && request.body.isNotEmpty()
+        ) {
             if (!request.isFormEncoded) {
                 connection.setRequestProperty("Content-Type", "application/json")
             }
@@ -90,7 +119,8 @@ class NetworkClient {
                     val res = getResponseFromStream(connection.inputStream)
                     Log.e("InAppStoryKT_Network", res!!)
                     callback.onSuccess(
-                        jsonParser.jsonToPOJO(res,
+                        jsonParser.jsonToPOJO(
+                            res,
                             callback.getClass()!!, callback.isList()
                         )
                     )

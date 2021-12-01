@@ -50,6 +50,7 @@ class StoriesList(context: Context, attrs: AttributeSet? = null, defStyleAttr: I
                         val stories = ArrayList<CellStoryModelProtocol>()
                         (response as ArrayList<StoryData>).forEach { story ->
                             stories.add(story)
+                            InAppStoryManager.storiesStorage?.updateStory(story)
                         }
                         val favImages: ArrayList<FavoriteImage> = ArrayList()
                         if (isFavoriteList) {
@@ -108,12 +109,12 @@ class StoriesList(context: Context, attrs: AttributeSet? = null, defStyleAttr: I
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        InAppStoryManager.storyFavoriteDispatcher!!.subscribers.add(manager)
+        manager.subscribe()
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        InAppStoryManager.storyFavoriteDispatcher!!.subscribers.remove(manager)
+        manager.unsubscribe()
     }
 
     private val manager = StoriesListManager()

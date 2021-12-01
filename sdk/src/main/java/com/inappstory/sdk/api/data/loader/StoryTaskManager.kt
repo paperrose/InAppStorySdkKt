@@ -6,7 +6,7 @@ import com.inappstory.sdk.network.callbacks.GetStoryCallback
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
+import java.util.concurrent.Executors
 
 class StoryTaskManager(
     val apiWorker: ApiWorker
@@ -18,9 +18,21 @@ class StoryTaskManager(
         HashMap()
     private var callbacks: HashMap<String, OnStoryLoaded?> =
         HashMap()
+    private val loader = Executors.newFixedThreadPool(1)
+
+    fun getLoadedStory(storyId: String): ReaderStoryDataProtocol? {
+        synchronized(storyTaskLock) {
+            return loadedStories[storyId]
+        }
+    }
+
+    val runnable: Runnable = Runnable {
+        checkQueue()
+    }
 
     private fun asyncCheckQueue() {
-        GlobalScope.launch { checkQueue() }
+        loader.submit(runnable)
+       // GlobalScope.launch { checkQueue() }
     }
 
     private fun checkQueue() {
@@ -33,10 +45,10 @@ class StoryTaskManager(
             if (!loadedStories.containsKey(key)) {
                 loadId = key
             }
-            storyTasks.remove(loadId)
+            storyTasks.remove(key)
         }
         if (loadId == null) {
-            Thread.sleep(1000)
+            Thread.sleep(100)
             synchronized(storyTaskLock) {
                 if (cleaned) return
             }

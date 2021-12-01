@@ -197,6 +197,14 @@ class RequestGenerator(var context: Context, var networkSettings: NetworkSetting
      * requests
      */
 
+    fun getContentTypeByUrl(url: String): String? {
+        return networkClient.getContentType(Request(
+            RequestType.HEAD,
+            url,
+            false
+        ));
+    }
+
     fun getStoryById(id: String, getStoryCallback: GetStoryCallback) {
         val request = Request(
             RequestType.GET,

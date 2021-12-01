@@ -6,28 +6,23 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
-import android.util.MutableInt
 import android.view.View
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
-import com.inappstory.sdk.ui.storiesreader.views.pager.StoriesReaderPagerViewModel
 import com.inappstory.sdk.utils.common.Sizes
 import kotlin.math.max
 import kotlin.math.min
 
-class TimelineView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int,
-                   var timerRepository: TimerRepository?) :
+class TimelineView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
     View(context, attrs, defStyleAttr) {
 
-
+    var storiesTimer = StoriesTimer()
     private val segments = mutableListOf<TimelineSegment>()
     private val segmentHeight = Sizes.dpToPxExt(3, context)
     private val marginWidth = Sizes.dpToPxExt(3, context)
     private val backgroundColor = Color.parseColor("#80FFFFFF")
     private val fillColor = Color.parseColor("#FFFFFF")
-    private val viewModel: TimelineViewModel? by lazy(LazyThreadSafetyMode.NONE) {
+    val viewModel: TimelineViewModel? by lazy(LazyThreadSafetyMode.NONE) {
         findViewTreeViewModelStoreOwner()?.let {
             val res = ViewModelProvider(it)[TimelineViewModel::class.java]
             res
@@ -35,19 +30,19 @@ class TimelineView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int,
     }
 
     constructor(context: Context)
-            : this(context, null, 0, null) {
+            : this(context, null, 0) {
     }
 
     constructor(context: Context, attrs: AttributeSet?)
-            : this(context, attrs, 0, null) {
+            : this(context, attrs, 0) {
     }
 
 
 
     fun initSegments() {
-        viewModel?.timerRepository = timerRepository
+        viewModel?.storiesTimer = storiesTimer
         segments.clear()
-        val count = timerRepository!!.getDurationsCount()
+        val count = storiesTimer.getDurationsCount()
         for (i in 0 until count) {
             segments.add(TimelineSegment(i))
         }
@@ -65,6 +60,30 @@ class TimelineView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int,
             }
         }
         invalidate()
+    }
+
+
+    fun setActive(isActive: Boolean) {
+        viewModel?.isActive = isActive
+        if (!isActive) {
+            stopTimeline()
+            viewModel?.stopTimer()
+            viewModel?.clearTimer()
+        }
+    }
+
+
+    fun setSlideCompleted(selected: Int) {
+        if (segments.isEmpty()) return
+        var ind = min(max(selected,0), segments.size-1)
+        segments[ind].state = TimelineSegment.TimelineSegmentState.FILLED
+    }
+
+    fun stopTimeline() {
+        segments.forEach {
+            if (it.state == TimelineSegment.TimelineSegmentState.ANIMATED)
+                it.state = TimelineSegment.TimelineSegmentState.EMPTY
+        }
     }
 
     fun setCurrentSlide(selected: Int) {

@@ -23,7 +23,8 @@ class StoriesReaderPagerAdapter(
 
     override fun getItem(position: Int): Fragment {
         if (pages[ids[position]] == null) {
-            pages[ids[position]] = ReaderPageFragment.newInstance(ids[position], readerSettings)
+            pages[ids[position]] = ReaderPageFragment.newInstance(ids[position],
+                readerSettings)
         }
         return pages[ids[position]]!!
     }

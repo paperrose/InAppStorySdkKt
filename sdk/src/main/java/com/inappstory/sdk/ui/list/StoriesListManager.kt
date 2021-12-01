@@ -1,5 +1,6 @@
 package com.inappstory.sdk.ui.list
 
+import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.api.dispatchers.DispatcherMessages
 import com.inappstory.sdk.api.dispatchers.DispatcherSubscriber
 import com.inappstory.sdk.ui.list.models.FavoriteImage
@@ -56,5 +57,13 @@ class StoriesListManager : DispatcherSubscriber {
                 }
             }
         }
+    }
+
+    override fun subscribe() {
+        InAppStoryManager.storyFavoriteDispatcher.subscribers.add(this)
+    }
+
+    override fun unsubscribe() {
+        InAppStoryManager.storyFavoriteDispatcher.subscribers.remove(this)
     }
 }

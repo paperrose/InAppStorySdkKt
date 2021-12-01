@@ -19,9 +19,16 @@ class ApiWorker(
 ) {
     val requestGenerator = RequestGenerator(context, NetworkSettings(apiKey, testKey, cmsUrl), userId)
     val sessionManager = SessionManager(requestGenerator)
-    val statisticManager = StatisticManagerV2(this)
-    val oldStatisticManager = StatisticManagerV1(this)
+    val statisticManagerV2 = StatisticManagerV2(this)
+    val statisticManagerV1 = StatisticManagerV1(this)
     val profilingManager = ProfilingManager(this)
+
+    fun getContentTypeByUrl(url: String): String? {
+        if (sessionManager.checkSessionSync()) {
+            requestGenerator.getContentTypeByUrl(url)
+        }
+        return null
+    }
 
     fun getStoryById(id: String, getStoryCallback: GetStoryCallback) {
         sessionManager.checkSession(object : SessionOpenCallback() {

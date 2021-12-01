@@ -4,14 +4,14 @@
 
     android:background="@android:color/holo_red_dark"
     android:layout_height="match_parent">
-    <View
-        android:layout_margin="4dp"
+    <com.inappstory.sdk.ui.storiesreader.views.webview.StoriesWebView
         android:layout_width="match_parent"
-
-        android:background="@android:color/black"
+        android:id="@+id/storiesView"
+        android:elevation="4dp"
         android:layout_height="match_parent"/>
     <com.inappstory.sdk.ui.storiesreader.views.timeline.TimelineView
         android:layout_margin="16dp"
+        android:elevation="8dp"
         android:id="@+id/timeline"
         android:layout_width="match_parent"
         android:layout_height="3dp"/>

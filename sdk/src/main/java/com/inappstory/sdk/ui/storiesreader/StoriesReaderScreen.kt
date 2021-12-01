@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.ViewPager
 import com.inappstory.sdk.databinding.CsStoriesReaderScreenDialogBinding
 import com.inappstory.sdk.ui.storiesreader.views.draggable.DraggableLayoutSubscriber
 import com.inappstory.sdk.ui.storiesreader.views.draggable.DraggableRepository
@@ -17,7 +19,7 @@ import com.inappstory.sdk.ui.storiesreader.views.pager.StoriesReaderPagerAdapter
 import com.inappstory.sdk.ui.storiesreader.views.pager.StoriesReaderPagerCallback
 
 class StoriesReaderScreen() : DialogFragment(), StoriesReaderPagerCallback,
-    DraggableLayoutSubscriber {
+    DraggableLayoutSubscriber, ViewPager.OnPageChangeListener {
     companion object {
         fun newInstance(
             storiesIds: ArrayList<String>,
@@ -29,7 +31,7 @@ class StoriesReaderScreen() : DialogFragment(), StoriesReaderPagerCallback,
             return fragment
         }
 
-        const val storiesIdsArgKey = "storyId"
+        const val storiesIdsArgKey = "storiesIds"
         const val settingsArgKey = "settings"
         const val indexArgKey = "index"
     }
@@ -69,18 +71,34 @@ class StoriesReaderScreen() : DialogFragment(), StoriesReaderPagerCallback,
 
     }
 
+    val storiesIds = ArrayList<String>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.storiesReaderPager.callback = this
+        storiesIds.clear()
+        storiesIds.addAll(requireArguments().getStringArrayList(storiesIdsArgKey)!!)
         binding.storiesReaderPager.adapter =
             StoriesReaderPagerAdapter(
                 childFragmentManager,
                 requireArguments().getString(settingsArgKey)!!,
-                requireArguments().getStringArrayList(storiesIdsArgKey)!!
+                storiesIds
             )
         binding.storiesReaderPager.currentItem = requireArguments().getInt(indexArgKey)
         binding.storiesReaderPager.setPageTransformer(true, CubeTransformer())
         binding.draggableLayout.viewModel?.subscribers?.add(this)
+        viewModel.initManagers(ArrayList(requireArguments().getStringArrayList(storiesIdsArgKey)))
+        binding.storiesReaderPager.addOnPageChangeListener(this)
+        val ind = requireArguments().getInt(indexArgKey)
+        if (ind > 0) {
+            binding.storiesReaderPager.currentItem = ind
+        } else {
+            onPageSelected(0)
+        }
+        viewModel.currentStoryIndex.observe(viewLifecycleOwner, {
+            if (it >= storiesIds.size) dismiss()
+            binding.storiesReaderPager.setCurrentItem(it, true)
+        })
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -123,15 +141,14 @@ class StoriesReaderScreen() : DialogFragment(), StoriesReaderPagerCallback,
     }
 
     override fun onPageScrolled(currentItem: Int, offset: Float, offsetPixels: Int) {
-
     }
 
     override fun onPageSelected(currentItem: Int) {
-
+        viewModel.loadStory(currentItem)
+        viewModel.setCurrentIdLiveData(storiesIds[currentItem])
     }
 
     override fun onPageScrollStateChanged(state: Int) {
-
     }
 
     override fun onDrag(

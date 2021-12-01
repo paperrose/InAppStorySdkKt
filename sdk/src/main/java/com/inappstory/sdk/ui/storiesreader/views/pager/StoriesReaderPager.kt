@@ -9,8 +9,7 @@ import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import kotlin.math.sqrt
 
-class StoriesReaderPager(context: Context, attrs: AttributeSet?) : ViewPager(context, attrs),
-    OnPageChangeListener {
+class StoriesReaderPager(context: Context, attrs: AttributeSet?) : ViewPager(context, attrs) {
     constructor(context: Context)
             : this(context, null) {
     }
@@ -85,14 +84,6 @@ class StoriesReaderPager(context: Context, attrs: AttributeSet?) : ViewPager(con
         return super.onInterceptTouchEvent(motionEvent)
     }
 
-    override fun onPageSelected(position: Int) {
-        callback?.onPageSelected(position)
-    }
-
-    override fun onPageScrollStateChanged(state: Int) {
-        callback?.onPageScrollStateChanged(state)
-    }
-
     override fun onPageScrolled(position: Int, offset: Float, offsetPixels: Int) {
         super.onPageScrolled(position, offset, offsetPixels)
         if (offset == 0f) {
@@ -102,6 +93,6 @@ class StoriesReaderPager(context: Context, attrs: AttributeSet?) : ViewPager(con
             viewModel?.viewIsBlocked(true)
             requestDisallowInterceptTouchEvent(true)
         }
-        callback?.onPageScrolled(position, offset, offsetPixels)
     }
+
 }
