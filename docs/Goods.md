@@ -1,7 +1,7 @@
 ## Stories Reader Goods Widget
 
 In stories you can add goods widget. It can be represented as horizontal list of items (default implementation with RecyclerView) or you can fully customize it.  
-If you want to use widget you should set csCustomGoodsWidget interface in global `AppearanceManager`. 
+If you want to use widget you should set `csCustomGoodsWidget` interface in global `AppearanceManager`. 
 Example:
 ```
 public class GoodsItemData {
