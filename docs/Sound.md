@@ -8,6 +8,6 @@ The method `InAppStoryManager.getInstance().soundOn(boolean isSoundOn)` flag is 
 
 By default after `InAppStoryManager` initialization sound is turned off. It can be changed in the `constants.xml`
 ```
-    <bool name="defaultMuted">true</bool>
+  <bool name="defaultMuted">true</bool>
 ```
 
