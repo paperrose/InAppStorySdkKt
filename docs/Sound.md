@@ -1,5 +1,5 @@
 
-### Work with sound
+## Work with sound
 
 The method `InAppStoryManager.getInstance().soundOn(boolean isSoundOn)` flag is responsible for on/off sound playback in stories (`true` - sound is on, `false` – sound is off). 
 ```
