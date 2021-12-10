@@ -59,11 +59,11 @@ If your project uses `ProGuard` obfuscation, add following rules to proguard con
 SDK can be initialized from any point with `Context` access (`Application`, `Activity`, `Fragment`, etc.)
 
 ```
-new InAppStoryManager.Builder()
-    .apiKey(apiKey) //String
-	.context(context) //Context
-	.userId(userId) //String
-    .create();
+	new InAppStoryManager.Builder()
+	    	.apiKey(apiKey) //String
+		.context(context) //Context
+		.userId(userId) //String
+	    	.create();
 ```
 >**Attention!**  
 >Method `create()` can generate `DataException` if SDK was not initialized. Strictly recommend to catch `DataException` for additional info.
