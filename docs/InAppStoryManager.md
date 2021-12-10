@@ -1,7 +1,7 @@
-##InAppStoryManager
+## InAppStoryManager
 
-###Initialization
+### Initialization
 
-###Methods
+### Methods
 
-###Callbacks
+### Callbacks
