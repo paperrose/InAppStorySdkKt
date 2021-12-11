@@ -81,7 +81,24 @@ Besides this methods there are some callbacks setters
 
 ### Callbacks
 
-####
+#### Enums used in methods:
+```
+public enum SourceType {
+    SINGLE, ONBOARDING, LIST, FAVORITE
+}    
+
+public enum CloseReader {
+    AUTO, CLICK, SWIPE, CUSTOM
+}
+
+public enum ClickAction {
+    BUTTON, SWIPE, GAME
+}
+```
+
+#### Handlers that overrides default behaviour
+
+1) When you click on a button in a story, or on story with a deeplink in storiesList
 ```
 InAppStoryManager.getInstance().setUrlClickCallback(UrlClickCallback callback);
 ```
@@ -114,7 +131,7 @@ startActivity(i);
 
 It is not used during overriding, so if you want to keep the processing of links that are not required by the application in their default form, then you need to take them into account when overriding.
 
-You can also override the handler for clicking on the sharing button as follows:
+2) When you click on `Share` button in stories reader or when you click on `Share widget` in story or game 
 ```
 InAppStoryManager.getInstance().setShareCallback(new InAppStoryManager.ShareCallback() {
     @Override
@@ -124,6 +141,8 @@ InAppStoryManager.getInstance().setShareCallback(new InAppStoryManager.ShareCall
 });
 ```
 
+#### Notifications from stories reader
+1) When you open story in reader (open Stories reader or swipe between its pages)
 ```
 InAppStoryManager.getInstance().setShowStoryCallback(ShowStoryCallback showStoryCallback); 
 
@@ -137,10 +156,9 @@ public interface ShowStoryCallback {
 }
 ```
 
-2) 
+2) When you close stories reader
 ```
-InAppStoryManager.getInstance().setCloseStoryCallback(CloseStoryCallback closeStoryCallback); 
-//equivalent to 'CloseStory' event
+InAppStoryManager.getInstance().setCloseStoryCallback(CloseStoryCallback closeStoryCallback);
 
 public interface CloseStoryCallback {
 
@@ -154,10 +172,9 @@ public interface CloseStoryCallback {
 }
 ```
 
-3) 
+3) When you click on a button in a story, or on story with a deeplink in storiesList. Same as `setUrlClickCallback` but with additional story info.
 ```
 InAppStoryManager.getInstance().setCallToActionCallback(CallToActionCallback callToActionCallback); 
-//equivalent to 'CallToAction' event
 
 public interface CallToActionCallback {
         void callToAction(int id,
@@ -170,10 +187,9 @@ public interface CallToActionCallback {
 }
 ```
 
-4) 
+4) When current visible slide loaded in reader
 ```
 InAppStoryManager.getInstance().setShowSlideCallback(ShowSlideCallback showSlideCallback); 
-//equivalent to 'ShowSlide' event
 
 public interface ShowSlideCallback {
         void showSlide(int id,
@@ -184,10 +200,9 @@ public interface ShowSlideCallback {
 }
 ```
 
-5) 
+5) When you click on `Share` button in stories reader. Does not override default share behaviour.
 ```
 InAppStoryManager.getInstance().setClickOnShareStoryCallback(ClickOnShareStoryCallback clickOnShareStoryCallback); 
-//equivalent to 'ClickOnShareStory' event
 
 public interface ClickOnShareStoryCallback {
         void shareClick(int id,
@@ -198,10 +213,9 @@ public interface ClickOnShareStoryCallback {
 }
 ```
 
-6) 
+6) When you click on `Like` or `Dislike` buttons in stories reader.
 ```
 InAppStoryManager.getInstance().setLikeDislikeStoryCallback(LikeDislikeStoryCallback likeDislikeStoryCallback); 
-//equivalent to 'LikeStory' and 'DislikeStory' event
 
 public interface LikeDislikeStoryCallback {
         void likeStory(int id,
@@ -220,10 +234,9 @@ public interface LikeDislikeStoryCallback {
 }
 ```
 
-7) 
+7) When you click on `Favorite` button in stories reader.
 ```
 InAppStoryManager.getInstance().setFavoriteStoryCallback(FavoriteStoryCallback favoriteStoryCallback); 
-//equivalent to 'FavoriteStory' event
 
 public interface FavoriteStoryCallback {
         void favoriteStory(int id,
@@ -235,31 +248,29 @@ public interface FavoriteStoryCallback {
 }
 ```
 
-8) 
-```
-InAppStoryManager.getInstance().setSingleLoadCallback(SingleLoadCallback singleLoadCallback) ; 
-//equivalent to 'SingleLoad' event
+#### Notifications from InAppStoryManager methods calls
 
-    
+8) When you call `showStory` and successfully load single story info from server.
+```
+InAppStoryManager.getInstance().setSingleLoadCallback(SingleLoadCallback singleLoadCallback); 
+
 public interface SingleLoadCallback {
         void singleLoad(String storyId);
 }
 ```
 
-9) 
+11) When you call `showOnboardingStories` and successfully load stories info from server.
 ```
 InAppStoryManager.getInstance().setOnboardingLoadCallback(OnboardingLoadCallback onboardingLoadCallback); 
-//equivalent to 'OnboardingLoad' event
 
 public interface OnboardingLoadCallback {
         void onboardingLoad(int count);
 }
 ```
 
-10) 
+#### Catching load errors in SDK.
 ```
 InAppStoryManager.getInstance().setErrorCallback(ErrorCallback errorCallback); 
-//equivalent to events that send different errors
 //can be set with custom implementation or with ErrorCallbackAdapter class
 
 public interface ErrorCallback {
@@ -274,10 +285,9 @@ public interface ErrorCallback {
 }
 ```
 
-11) 
+#### Notifications from Game reader
 ```
 InAppStoryManager.getInstance().setGameCallback(GameCallback gameCallback); 
-//equivalent to 'StartGame', 'CloseGame' and 'FinishGame' events
 //can be set with custom implementation or with GameCallbackAdapter class
 
 public interface GameCallback {
@@ -301,17 +311,4 @@ public interface GameCallback {
                        int index);
 }
 ```
-Enums used in methods:
-```
-public enum SourceType {
-    SINGLE, ONBOARDING, LIST, FAVORITE
-}    
 
-public enum CloseReader {
-    AUTO, CLICK, SWIPE, CUSTOM
-}
-
-public enum ClickAction {
-    BUTTON, SWIPE, GAME
-}
-```
