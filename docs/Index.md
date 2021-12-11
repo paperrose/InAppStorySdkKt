@@ -6,9 +6,9 @@ A library for embedding stories into an application with customization.
 
 * [How to getting started](https://github.com/paperrose/InAppStorySdkKt/blob/master/README.md)
 * [InAppStoryManager](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/InAppStoryManager.md)
-	* [Initialization](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/InAppStoryManager.md)
-	* [Methods](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/InAppStoryManager.md)
-	* [Callbacks](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/InAppStoryManager.md)
+	* [Initialization](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/InAppStoryManager.md#initialization)
+	* [Methods](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/InAppStoryManager.md#methods)
+	* [Callbacks](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/InAppStoryManager.md#callbacks)
 * [StoriesList](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/StoriesList.md)
 	* [Initialization](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/StoriesList.md)
 	* [Methods](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/StoriesList.md)
