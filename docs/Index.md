@@ -22,5 +22,6 @@ A library for embedding stories into an application with customization.
 * [Stories Reader Goods Widget](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/Goods.md)
 * [Home Screen Widget](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/Home_Screen_Widget.md)
 * [Events](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/CsEventBus.md)
+* [Jetpack Compose](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/JetpackCompose.md)
 * [FAQ](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/FAQ.md)
 * [Samples](https://github.com/paperrose/InAppStorySdkKt/blob/master/README.md)
