@@ -250,7 +250,7 @@ public interface FavoriteStoryCallback {
 
 #### Notifications from InAppStoryManager methods calls
 
-8) When you call `showStory` and successfully load single story info from server.
+1) When you call `showStory` and successfully load single story info from server.
 ```
 InAppStoryManager.getInstance().setSingleLoadCallback(SingleLoadCallback singleLoadCallback); 
 
@@ -259,7 +259,7 @@ public interface SingleLoadCallback {
 }
 ```
 
-11) When you call `showOnboardingStories` and successfully load stories info from server.
+2) When you call `showOnboardingStories` and successfully load stories info from server.
 ```
 InAppStoryManager.getInstance().setOnboardingLoadCallback(OnboardingLoadCallback onboardingLoadCallback); 
 
