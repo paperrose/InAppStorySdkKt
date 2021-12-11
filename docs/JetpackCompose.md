@@ -1,6 +1,6 @@
 ## Add StoriesList via Jetpack Compose
 
-StoriesList extends RecyclerView class and available like Compose component. If you use Jetpack Compose in your project, instead you can add StoriesList like [AndroidView](https://developer.android.com/jetpack/compose/interop/interop-apis#views-in-compose)
+`StoriesList` extends RecyclerView class and available like Compose component. If you use Jetpack Compose in your project, instead you can add `StoriesList` like [AndroidView](https://developer.android.com/jetpack/compose/interop/interop-apis#views-in-compose)
 
 ```
 class MainActivity : ComponentActivity() {
