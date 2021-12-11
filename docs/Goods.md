@@ -1,7 +1,7 @@
 ## Stories Reader Goods Widget
 
 In stories you can add goods widget. It can be represented as horizontal list of items (default implementation with RecyclerView) or you can fully customize it.  
-If you want to use widget you should set `csCustomGoodsWidget` interface in global `AppearanceManager`. 
+If you want to use widget you should set `csCustomGoodsWidget` interface in common `AppearanceManager`. 
 Example:
 ```
 public class GoodsItemData {
@@ -21,7 +21,7 @@ public interface GetGoodsDataCallback {
     void itemClick(String sku); //Use to send click statistic in custom widget
 }
 
-globalAppearanceManager.csCustomGoodsWidget(new ICustomGoodsWidget() {
+AppearanceManager.getCommonInstance().csCustomGoodsWidget(new ICustomGoodsWidget() {
     @Override
     public View getWidgetView() {
         ...
@@ -129,7 +129,7 @@ public void getSkus(ArrayList<String> skus, GetGoodsDataCallback callback) {
 ```
 If you want to fully customize your widget, you should override `getWidgetView()` to return NonNull view. In that case all binding logic should be in `getSkus()` method. For example:
 ```
-globalAppearanceManager.csCustomGoodsWidget(new ICustomGoodsWidget() {
+AppearanceManager.getCommonInstance().csCustomGoodsWidget(new ICustomGoodsWidget() {
                 RelativeLayout container;
 
                 @Override
