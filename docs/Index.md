@@ -5,6 +5,7 @@ A library for embedding stories into an application with customization.
 ## Contents
 
 * [How to getting started](https://github.com/paperrose/InAppStorySdkKt/blob/master/README.md)
+* [Migrations](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/Migrations.md)
 * [InAppStoryManager](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/InAppStoryManager.md)
 	* [Initialization](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/InAppStoryManager.md#initialization)
 	* [Methods](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/InAppStoryManager.md#methods)
