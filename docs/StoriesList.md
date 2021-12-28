@@ -76,7 +76,7 @@ Also, there are several interfaces in the `AppearanceManager`.
         void setVideo(View itemView, String videoPath); // itemView is the current cell, in the required View we show the video cover (videoPath - path for local file). To work with video cells, it is recommended to use a class from the VideoPlayer library as a container for displaying video and the loadVideo(String videoPath) method to launch. The VideoPlayer class inherits from TextureView
     }
 ```
-If this interface is specified, other parameters, affecting the appearance of the list cell, will be ignored.
+
 Example:
 ```
     appearanceManager
@@ -121,6 +121,9 @@ Example:
             }
         });
 ```
+
+>**Attention!**  
+>If this interface is specified, other parameters, affecting the appearance of the list cell, will be ignored.
 
 #### IGetFavoriteListItem
 
