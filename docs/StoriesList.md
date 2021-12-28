@@ -65,6 +65,9 @@ Also, there are several interfaces in the `AppearanceManager`.
 
 `IStoriesListItem csListItemInterface` - used for full customization of list items.
 
+>**Attention!**  
+>If this interface is specified, other parameters, affecting the appearance of the list cell, will be ignored.
+
 ```
     interface IStoriesListItem {
         View getView(); // here you need to pass View - the appearance of the cell
@@ -122,8 +125,6 @@ Example:
         });
 ```
 
->**Attention!**  
->If this interface is specified, other parameters, affecting the appearance of the list cell, will be ignored.
 
 #### IGetFavoriteListItem
 
