@@ -21,7 +21,7 @@ Some parameters in `AppearanceManager` can be set only for common instance:
 
 | Variable                         | Type                |Default |Purpose| Description                                                             |
 |----------------------------------|---------------------|--------|-------|-------------------------------------------------------------------------|
-| csCustomFont                     | Typeface            | null   |List, Inputs | the primary regular font in inputs |
+| csCustomFont                     | Typeface            | null   |Inputs | the primary regular font in inputs |
 | csCustomBoldFont                 | Typeface            | null   |Inputs | the primary bold font in inputs |
 | csCustomItalicFont               | Typeface            | null   |Inputs | the primary italic font in inputs |
 | csCustomBoldItalicFont           | Typeface            | null   |Inputs | the primary bold italic font in inputs |
@@ -35,6 +35,7 @@ Another parameters can be set separately for list/onboardings/single:
 
 | Variable                         | Type                |Default |Purpose| Description                                                             |
 |----------------------------------|---------------------|--------|-------|-------------------------------------------------------------------------|
+| csCustomFont                     | Typeface            | null   |List   | the primary regular font for list cells. It can be set separately only for list cells, but not for inputs |
 | csHasLike            			   | Boolean             | false  |Reader | Flag that is responsible for connecting the like / dislike functionality|
 | csHasShare           			   | Boolean             | false  |Reader | Flag that is responsible for connecting the sharing functionality       |       
 | csHasFavorite        			   | Boolean             | false  |Reader | Flag that is responsible for connecting the functionality of favorite stories |
