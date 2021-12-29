@@ -80,7 +80,7 @@ If you want to show only favorited stories in list - add `StoriesList` like this
 <com.inappstory.sdk.stories.ui.list.StoriesList
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-      app:cs_listIsFavorite="true"
+      	    app:cs_listIsFavorite="true"
 	    android:id="@+id/stories_list"/>
       
 ```
