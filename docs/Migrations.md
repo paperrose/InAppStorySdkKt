@@ -2,7 +2,13 @@
 
 ### From 1.5.x to 1.6.x
 
-InAppStoryManager can't be initialized through Builder without setting userId (You still can pass empty String, but value can't be null).
+`setInstance` method for `AppearanceManager` now is deprecated. Use `setCommonInstance` method instead.
+
+`csStoryTouchListener` method for `AppearanceManager` now is deprecated. Use `setStoryTouchListener` method for `StoriesList` instead.
+ 
+If you don't want customize anything and use default implementations - you can call `loadStories()` method from `StoriesList` without setting `AppearanceManager`. 
+
+`InAppStoryManager` can't be initialized through Builder without setting userId (You still can pass empty String, but value can't be null).
 
 For custom stories list cell interface `IStoriesListItem` has changed. Now it returns cached file path instead of web url in `setImage` and `setVideo` methods and calls only after this resouces are cached.
 Also poster url and background color were removed from `setVideo`.
