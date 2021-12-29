@@ -7,7 +7,7 @@
 	<com.inappstory.sdk.stories.ui.list.StoriesList
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-        app:cs_listIsFavorite="false"
+            app:cs_listIsFavorite="false"
 	    android:id="@+id/stories_list"/>
 ```
 
