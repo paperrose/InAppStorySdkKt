@@ -86,3 +86,14 @@ If you want to show only favorited stories in list - add `StoriesList` like this
 ```
 You can also customize favorite cell in list with `csFavoriteListItemInterface` property in `AppearanceManager`
 More about this you can read [here](https://github.com/paperrose/InAppStorySdkKt/blob/master/docs/StoriesList.md#igetfavoritelistitem).
+
+To interact with the favorite cell (for example, to open a new window with a list of favorite stories), you need to add a handler:
+
+```
+    storiesList.setOnFavoriteItemClick(new StoriesList.OnFavoriteItemClick() {
+        @Override
+        public void onClick() {
+            doAction();
+        }
+    });
+```
