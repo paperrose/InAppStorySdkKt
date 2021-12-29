@@ -2,7 +2,7 @@
 
 #### 1) Cell reshaping: rectangle, circle 
 
-In order to define a rectangular cell - in the `AppearanceManager` you can use `csListItemWidth (int width)`, `csListItemHeight (int height)`. If you need a round cell, you need to use customization via `csListItemInterface`. 
+In order to define a rectangular cell - in the `AppearanceManager` you can use `csListItemWidth(int width)`, `csListItemHeight(int height)`, `csListItemRadius(int radius)`. If you need mor customization - you need to use `csListItemInterface`. 
 
 #### 2) Custom font 
 
@@ -71,5 +71,5 @@ In the file `constants.xml` in the `defaultMuted` variable set a value. If `true
 Change the value of the `InAppStoryManager.getInstance().soundOn` flag. 
 Example:
 ```
-InAppStoryManager.getInstance().soundOn = true;
+InAppStoryManager.getInstance().soundOn(true);
 ```
