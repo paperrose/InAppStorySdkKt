@@ -184,6 +184,18 @@ Also, to interact with the favorite cell (for example, to open a new window with
     });
 ```
 
+Clicks to list cells also can be customized with next handler (for example - if you want to add click touch animations):
+```
+    storiesList.setStoryTouchListener(StoryTouchListener touchListener);
+    
+    public interface StoryTouchListener {
+    	void touchDown(View view, int position);
+
+    	void touchUp(View view, int position);
+    }
+```
+
+
 ### Callbacks
 `StoriesList` actions (loading and clicks) can be obtained with `ListCallback`. It can be set with custom implementation or with `ListCallbackAdapter` (default implementation for `ListCallback` with empty methods) class
 ```
